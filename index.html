@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flaggen Quiz für Kinder</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #dbeafe, #f8fafc 45%, #e0f2fe);
+      color: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 620px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 28px;
+      box-shadow: 0 25px 60px rgba(15, 23, 42, 0.18);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 24px;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      color: white;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    .header p {
+      margin: 8px 0 0;
+      opacity: 0.95;
+      font-size: 16px;
+    }
+
+    .content {
+      padding: 22px;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .stat span {
+      display: block;
+      color: #2563eb;
+      font-size: 18px;
+      margin-top: 4px;
+    }
+
+    .flag-wrap {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+    }
+
+    .flag {
+      width: 100%;
+      max-width: 360px;
+      height: 220px;
+      display: block;
+      margin: 0 auto;
+      object-fit: contain;
+      border-radius: 14px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+    }
+
+    .question {
+      margin: 18px 0 12px;
+      font-size: 22px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 16px;
+      padding: 15px 14px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .option-btn {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+      min-height: 58px;
+    }
+
+    .option-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .option-btn.correct {
+      background: #16a34a;
+    }
+
+    .option-btn.wrong {
+      background: #dc2626;
+    }
+
+    .message {
+      min-height: 34px;
+      margin-top: 14px;
+      text-align: center;
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .next-btn {
+      background: #22c55e;
+      color: white;
+      display: none;
+    }
+
+    .restart-btn {
+      background: #0f172a;
+      color: white;
+    }
+
+    .small-btn {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .result-box {
+      display: none;
+      text-align: center;
+      padding: 18px;
+      background: #ecfeff;
+      border: 1px solid #a5f3fc;
+      border-radius: 22px;
+    }
+
+    .result-box h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .menu {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    select {
+      width: 100%;
+      padding: 13px;
+      border-radius: 14px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+      background: white;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 10px;
+      }
+
+      .header h1 {
+        font-size: 25px;
+      }
+
+      .content {
+        padding: 16px;
+      }
+
+      .flag {
+        height: 170px;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <section class="header">
+      <h1>🌍 Flaggen Quiz</h1>
+      <p>Schau dir die Flagge an und wähle das richtige Land.</p>
+    </section>
+
+    <section class="content">
+      <div class="menu card" id="menuBox">
+        <label>
+          Anzahl Fragen:
+          <select id="questionCount">
+            <option value="10">10 Fragen</option>
+            <option value="20" selected>20 Fragen</option>
+            <option value="30">30 Fragen</option>
+            <option value="50">50 Fragen</option>
+          </select>
+        </label>
+        <button class="restart-btn" onclick="startGame()">Quiz starten / neu mischen</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat">Frage <span id="questionNumber">1 / 20</span></div>
+        <div class="stat">Punkte <span id="score">0</span></div>
+        <div class="stat">Richtig <span id="percent">0%</span></div>
+      </div>
+
+      <div class="card">
+        <div class="flag-wrap">
+          <img class="flag" id="flag" src="" alt="Flagge" />
+        </div>
+
+        <div class="question" id="questionText">Welches Land ist das?</div>
+        <div class="options" id="options"></div>
+        <div class="message" id="message"></div>
+
+        <div class="controls">
+          <button class="next-btn" id="nextButton" onclick="nextQuestion()">Weiter</button>
+          <button class="small-btn" onclick="startGame()">Neue Runde</button>
+        </div>
+      </div>
+
+      <div class="result-box" id="resultBox"></div>
+    </section>
+  </main>
+
+  <script>
+    const countries = [
+      { code: "de", name: "Deutschland" },
+      { code: "fr", name: "Frankreich" },
+      { code: "it", name: "Italien" },
+      { code: "es", name: "Spanien" },
+      { code: "pt", name: "Portugal" },
+      { code: "nl", name: "Niederlande" },
+      { code: "be", name: "Belgien" },
+      { code: "ch", name: "Schweiz" },
+      { code: "at", name: "Österreich" },
+      { code: "pl", name: "Polen" },
+      { code: "cz", name: "Tschechien" },
+      { code: "sk", name: "Slowakei" },
+      { code: "hu", name: "Ungarn" },
+      { code: "ro", name: "Rumänien" },
+      { code: "bg", name: "Bulgarien" },
+      { code: "gr", name: "Griechenland" },
+      { code: "hr", name: "Kroatien" },
+      { code: "si", name: "Slowenien" },
+      { code: "rs", name: "Serbien" },
+      { code: "ba", name: "Bosnien und Herzegowina" },
+      { code: "al", name: "Albanien" },
+      { code: "mk", name: "Nordmazedonien" },
+      { code: "ua", name: "Ukraine" },
+      { code: "ru", name: "Russland" },
+      { code: "lt", name: "Litauen" },
+      { code: "lv", name: "Lettland" },
+      { code: "ee", name: "Estland" },
+      { code: "se", name: "Schweden" },
+      { code: "no", name: "Norwegen" },
+      { code: "dk", name: "Dänemark" },
+      { code: "fi", name: "Finnland" },
+      { code: "is", name: "Island" },
+      { code: "ie", name: "Irland" },
+      { code: "gb", name: "Großbritannien" },
+      { code: "us", name: "USA" },
+      { code: "ca", name: "Kanada" },
+      { code: "mx", name: "Mexiko" },
+      { code: "br", name: "Brasilien" },
+      { code: "ar", name: "Argentinien" },
+      { code: "cl", name: "Chile" },
+      { code: "co", name: "Kolumbien" },
+      { code: "pe", name: "Peru" },
+      { code: "uy", name: "Uruguay" },
+      { code: "py", name: "Paraguay" },
+      { code: "bo", name: "Bolivien" },
+      { code: "ve", name: "Venezuela" },
+      { code: "ec", name: "Ecuador" },
+      { code: "cu", name: "Kuba" },
+      { code: "jp", name: "Japan" },
+      { code: "cn", name: "China" },
+      { code: "in", name: "Indien" },
+      { code: "pk", name: "Pakistan" },
+      { code: "bd", name: "Bangladesch" },
+      { code: "np", name: "Nepal" },
+      { code: "lk", name: "Sri Lanka" },
+      { code: "th", name: "Thailand" },
+      { code: "vn", name: "Vietnam" },
+      { code: "my", name: "Malaysia" },
+      { code: "id", name: "Indonesien" },
+      { code: "ph", name: "Philippinen" },
+      { code: "sg", name: "Singapur" },
+      { code: "kr", name: "Südkorea" },
+      { code: "mn", name: "Mongolei" },
+      { code: "kz", name: "Kasachstan" },
+      { code: "uz", name: "Usbekistan" },
+      { code: "az", name: "Aserbaidschan" },
+      { code: "am", name: "Armenien" },
+      { code: "ge", name: "Georgien" },
+      { code: "tr", name: "Türkei" },
+      { code: "iq", name: "Irak" },
+      { code: "ir", name: "Iran" },
+      { code: "sy", name: "Syrien" },
+      { code: "jo", name: "Jordanien" },
+      { code: "lb", name: "Libanon" },
+      { code: "ps", name: "Palästina" },
+      { code: "sa", name: "Saudi-Arabien" },
+      { code: "ae", name: "Vereinigte Arabische Emirate" },
+      { code: "qa", name: "Katar" },
+      { code: "kw", name: "Kuwait" },
+      { code: "om", name: "Oman" },
+      { code: "ye", name: "Jemen" },
+      { code: "eg", name: "Ägypten" },
+      { code: "ma", name: "Marokko" },
+      { code: "dz", name: "Algerien" },
+      { code: "tn", name: "Tunesien" },
+      { code: "ly", name: "Libyen" },
+      { code: "sd", name: "Sudan" },
+      { code: "et", name: "Äthiopien" },
+      { code: "ke", name: "Kenia" },
+      { code: "ng", name: "Nigeria" },
+      { code: "gh", name: "Ghana" },
+      { code: "sn", name: "Senegal" },
+      { code: "cm", name: "Kamerun" },
+      { code: "za", name: "Südafrika" },
+      { code: "au", name: "Australien" },
+      { code: "nz", name: "Neuseeland" },
+      { code: "fj", name: "Fidschi" },
+      {
+        code: "kurdistan",
+        name: "Kurdistan",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Flag%20of%20Kurdistan.svg"
+      }
+    ];
+
+    let questions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let answered = false;
+
+    function shuffle(items) {
+      const array = [...items];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function getFlagUrl(country) {
+      if (country.image) return country.image;
+      return `https://flagcdn.com/w640/${country.code}.png`;
+    }
+
+    function startGame() {
+      const count = Number(document.getElementById("questionCount").value);
+      questions = shuffle(countries).slice(0, count);
+      currentIndex = 0;
+      score = 0;
+      answered = false;
+      document.getElementById("resultBox").style.display = "none";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      answered = false;
+      const country = questions[currentIndex];
+      const flag = document.getElementById("flag");
+      const options = document.getElementById("options");
+      const message = document.getElementById("message");
+      const nextButton = document.getElementById("nextButton");
+
+      flag.src = getFlagUrl(country);
+      flag.alt = `Flagge von ${country.name}`;
+      flag.onerror = function () {
+        this.src = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
+      };
+
+      message.textContent = "";
+      nextButton.style.display = "none";
+      options.innerHTML = "";
+
+      const wrongAnswers = shuffle(countries)
+        .filter(item => item.name !== country.name)
+        .slice(0, 3)
+        .map(item => item.name);
+
+      const answerOptions = shuffle([country.name, ...wrongAnswers]);
+
+      answerOptions.forEach(name => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = name;
+        btn.onclick = () => checkAnswer(btn, name, country.name);
+        options.appendChild(btn);
+      });
+
+      updateStats();
+    }
+
+    function checkAnswer(button, selected, correct) {
+      if (answered) return;
+      answered = true;
+
+      const buttons = document.querySelectorAll(".option-btn");
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === correct) btn.classList.add("correct");
+      });
+
+      if (selected === correct) {
+        score++;
+        document.getElementById("message").innerHTML = "✅ Richtig! Super gemacht.";
+      } else {
+        button.classList.add("wrong");
+        document.getElementById("message").innerHTML = `❌ Falsch.<br>Richtig ist: ${correct}`;
+      }
+
+      document.getElementById("nextButton").style.display = "inline-block";
+      updateStats();
+    }
+
+    function nextQuestion() {
+      if (currentIndex >= questions.length - 1) {
+        endGame();
+        return;
+      }
+
+      currentIndex++;
+      showQuestion();
+    }
+
+    function updateStats() {
+      const done = answered ? currentIndex + 1 : currentIndex;
+      const percent = done === 0 ? 0 : Math.round((score / done) * 100);
+      document.getElementById("questionNumber").textContent = `${currentIndex + 1} / ${questions.length}`;
+      document.getElementById("score").textContent = score;
+      document.getElementById("percent").textContent = `${percent}%`;
+    }
+
+    function endGame() {
+      document.getElementById("options").innerHTML = "";
+      document.getElementById("nextButton").style.display = "none";
+      document.getElementById("questionText").textContent = "Quiz beendet!";
+      document.getElementById("message").textContent = "";
+      document.getElementById("flag").src = "https://cdn-icons-png.flaticon.com/512/2583/2583344.png";
+
+      let feedback = "";
+      if (score >= questions.length * 0.85) feedback = "Fantastisch! 🌟";
+      else if (score >= questions.length * 0.6) feedback = "Gut gemacht! 😊";
+      else feedback = "Weiter üben, du schaffst das! 💪";
+
+      const resultBox = document.getElementById("resultBox");
+      resultBox.style.display = "block";
+      resultBox.innerHTML = `
+        <h2>${feedback}</h2>
+        <p>Du hast <b>${score}</b> von <b>${questions.length}</b> Punkten geschafft.</p>
+        <button class="restart-btn" onclick="startGame()">Nochmal spielen</button>
+      `;
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
